@@ -1,5 +1,6 @@
 import {React, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { supabase } from '../supabase/supabase';
 import { 
   StyleSheet, 
   Text, 
@@ -7,12 +8,26 @@ import {
   Image, 
   TextInput, 
   KeyboardAvoidingView,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const signIn = async () => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: 'example@email.com',
+      password: 'example-password',
+    })
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      console.log('success');
+    }
+  }
 
   return (
     <KeyboardAvoidingView behavior='height' style={styles.container}>
@@ -28,6 +43,7 @@ export default function SignIn({ navigation }) {
         keyboardType='email-address'
         placeholder="Email"
         placeholderTextColor={'#8FE3CF'}
+        autoCapitalize={'none'}
       />
       <TextInput
         style={styles.input}
@@ -37,10 +53,11 @@ export default function SignIn({ navigation }) {
         secureTextEntry={true}
         placeholder="Password"
         placeholderTextColor={'#8FE3CF'}
+        autoCapitalize={'none'}
       />
       <Button title='Sign In' 
       style={styles.button}
-      onPress={() =>  console.log(email, password)}
+      onPress={signIn}
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Create Account')}

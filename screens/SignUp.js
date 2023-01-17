@@ -1,22 +1,35 @@
-import {React, useState } from 'react';
+import { React, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { supabase } from '../supabase/supabase';
+import { StackActions } from '@react-navigation/native';
+
 import { 
-  StyleSheet, 
-  Text, 
-  Button, 
-  Image, 
-  TextInput, 
+  StyleSheet,
+  Button,
+  Image,
+  TextInput,
   KeyboardAvoidingView,
+  Alert
 } from 'react-native';
+
+const popAction = StackActions.pop(1);
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const signUp = () => {
-    //validate that email is not a duplicate and add to db
-    //if successful navigate back to login page
+  async function signUpWithEmail() {
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    })
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      navigation.dispatch(popAction);
+    }
   }
 
   return (
@@ -27,33 +40,36 @@ export default function SignUp({ navigation }) {
       /> 
       <TextInput
         style={styles.input}
-        onChangeText={email => setEmail({email})}
+        onChangeText={email => setEmail(email)}
         value={email}
         textContentType="emailAddress"
         keyboardType='email-address'
         placeholder="Email"
         placeholderTextColor={'#8FE3CF'}
+        autoCapitalize={'none'}
       />
       <TextInput 
         style={styles.input}
         value={username}
-        onChangeText={username => setUsername({username})}
+        onChangeText={username => setUsername(username)}
         textContentType='username'
         placeholder='Username'
         placeholderTextColor={'#8FE3CF'}
+        autoCapitalize={'none'}
       />
       <TextInput
         style={styles.input}
-        onChangeText={password => setPassword({password})}
+        onChangeText={password => setPassword(password)}
         value={password}
         textContentType="password"
         secureTextEntry={true}
         placeholder="Password"
         placeholderTextColor={'#8FE3CF'}
+        autoCapitalize={'none'}
       />
       <Button title='Create Account' 
       style={styles.button}
-      onPress={signUp()}
+      onPress={() => signUpWithEmail()}
       />
       <StatusBar style="auto" />
     </KeyboardAvoidingView>
