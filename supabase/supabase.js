@@ -1,6 +1,14 @@
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const supabaseUrl = 'https://lpfgiafnpcpzqexmkwvw.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwZmdpYWZucGNwenFleG1rd3Z3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzM5MzM3ODYsImV4cCI6MTk4OTUwOTc4Nn0.mXhSm_RuxiWZY_TaxkJF7KJ2QReaqpF8AO6ioEw2-rA'
-export const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = 'https://wezjdynawimihebombwu.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlempkeW5hd2ltaWhlYm9tYnd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQwMDEyMTgsImV4cCI6MTk4OTU3NzIxOH0.-UULqF-4Q9XtvwSw0RScR6j0h3ik4_1QkX1Nub5XuhY';
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    storage: AsyncStorage,
+    autoRefreshToken: true, 
+    persistSession: true,
+    detectSessionInUrl: false
+  }
+});

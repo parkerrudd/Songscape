@@ -1,6 +1,5 @@
 import { React, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { supabase } from '../supabase/supabase';
 import { StackActions } from '@react-navigation/native';
 
 import { 
@@ -11,6 +10,8 @@ import {
   KeyboardAvoidingView,
   Alert
 } from 'react-native';
+
+import { supabase } from '../supabase/supabase';
 
 const popAction = StackActions.pop(1);
 
@@ -28,8 +29,19 @@ export default function SignUp({ navigation }) {
     if (error) {
       Alert.alert(error.message);
     } else {
+      createProfile();
       navigation.dispatch(popAction);
     }
+  }
+
+  const createProfile = async () => {
+    const { data, error } = await supabase
+    .from('profiles')
+    .insert([
+      { username: username },
+    ])
+
+    if (error) Alert.alert(error.message);
   }
 
   return (

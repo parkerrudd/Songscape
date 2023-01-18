@@ -1,6 +1,7 @@
-import {React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { supabase } from '../supabase/supabase';
+import { useAtom } from 'jotai';
+import { sessionAtom, sessionUserAtom } from '../jotai/jotai';
 import { 
   StyleSheet, 
   Text, 
@@ -12,20 +13,27 @@ import {
   Alert
 } from 'react-native';
 
+import { supabase } from '../supabase/supabase';
+
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [session, setSession] = useAtom(sessionAtom);
+  const [sessionUser, setSessionUser] = useAtom(sessionUserAtom);
 
   const signIn = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'example@email.com',
-      password: 'example-password',
+      email: email,
+      password: password,
     })
+
+    setSession(data ?? undefined);
+    setSessionUser(data?.user ?? undefined);
 
     if (error) {
       Alert.alert(error.message);
     } else {
-      console.log('success');
+      navigation.navigate('Profile');
     }
   }
 
@@ -37,7 +45,7 @@ export default function SignIn({ navigation }) {
       /> 
       <TextInput
         style={styles.input}
-        onChangeText={email => setEmail({email})}
+        onChangeText={email => setEmail(email)}
         value={email}
         textContentType="emailAddress"
         keyboardType='email-address'
@@ -47,7 +55,7 @@ export default function SignIn({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        onChangeText={password => setPassword({password})}
+        onChangeText={password => setPassword(password)}
         value={password}
         textContentType="password"
         secureTextEntry={true}
