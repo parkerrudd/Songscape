@@ -64,7 +64,7 @@ export default function Profile() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal
         animationType="slide"
         visible={modalVisible}
@@ -147,7 +147,7 @@ export default function Profile() {
       >
         <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }
 

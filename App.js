@@ -20,14 +20,17 @@ export default function App() {
             <Stack.Screen
               name="Login"
               component={SignIn}
+              options={{ headerShown: false }}
             />
           <Stack.Screen
             name="Create Account"
             component={SignUp}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Profile"
             component={Profile}
+            options={{ headerShown: false }}
           />
           </Stack.Navigator>
         </NavigationContainer>
