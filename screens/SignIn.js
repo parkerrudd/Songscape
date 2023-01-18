@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useAtom } from 'jotai';
 import { sessionAtom, sessionUserAtom } from '../jotai/jotai';
@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 import { supabase } from '../supabase/supabase';
+import { secondary, primary, accent } from '../styles/colors/colors';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
@@ -50,7 +51,7 @@ export default function SignIn({ navigation }) {
         textContentType="emailAddress"
         keyboardType='email-address'
         placeholder="Email"
-        placeholderTextColor={'#8FE3CF'}
+        placeholderTextColor={secondary}
         autoCapitalize={'none'}
       />
       <TextInput
@@ -60,7 +61,7 @@ export default function SignIn({ navigation }) {
         textContentType="password"
         secureTextEntry={true}
         placeholder="Password"
-        placeholderTextColor={'#8FE3CF'}
+        placeholderTextColor={secondary}
         autoCapitalize={'none'}
       />
       <Button title='Sign In' 
@@ -71,7 +72,7 @@ export default function SignIn({ navigation }) {
         onPress={() => navigation.navigate('Create Account')}
       >
         <Text
-          style={{ color: '#8FE3CF', textDecorationLine: 'underline'}}  
+          style={{ color: secondary, textDecorationLine: 'underline'}}  
         >
           Don't have an account? Sign up now.
         </Text>
@@ -84,7 +85,7 @@ export default function SignIn({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2B4865',
+    backgroundColor: primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -97,15 +98,15 @@ const styles = StyleSheet.create({
     width: '60%',
     margin: 12,
     borderWidth: 1,
-    borderColor: '#256D85',
+    borderColor: accent,
     borderRadius: 5,
     padding: 10,
-    color: '#8FE3CF',
+    color: secondary,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#8FE3CF',
-    color: '#256D85',
+    backgroundColor: secondary,
+    color: accent,
     width: 10,
     height: 10
   }

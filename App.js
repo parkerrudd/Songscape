@@ -1,7 +1,7 @@
-import { React, useEffect } from "react";
+import { React } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Provider as JotaiProvider, useAtom } from "jotai";
+import { Provider as JotaiProvider } from "jotai";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import SignIn from "./screens/SignIn";

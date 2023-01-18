@@ -13,6 +13,8 @@ import {
 
 import { supabase } from '../supabase/supabase';
 
+import { secondary, primary, accent } from '../styles/colors/colors';
+
 const popAction = StackActions.pop(1);
 
 export default function SignUp({ navigation }) {
@@ -21,7 +23,7 @@ export default function SignUp({ navigation }) {
   const [password, setPassword] = useState('');
 
   async function signUpWithEmail() {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: email,
       password: password,
     })
@@ -35,7 +37,7 @@ export default function SignUp({ navigation }) {
   }
 
   const createProfile = async () => {
-    const { data, error } = await supabase
+    const { error } = await supabase
     .from('profiles')
     .insert([
       { username: username },
@@ -91,7 +93,7 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2B4865',
+    backgroundColor: primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -104,15 +106,15 @@ const styles = StyleSheet.create({
     width: '60%',
     margin: 12,
     borderWidth: 1,
-    borderColor: '#256D85',
+    borderColor: accent,
     borderRadius: 5,
     padding: 10,
-    color: '#8FE3CF',
+    color: secondary,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#8FE3CF',
-    color: '#256D85',
+    backgroundColor: secondary,
+    color: accent,
     width: 10,
     height: 10
   }
