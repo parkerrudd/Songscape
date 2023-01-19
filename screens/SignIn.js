@@ -13,7 +13,7 @@ import {
   Alert
 } from 'react-native';
 
-import { supabase } from '../supabase/supabase';
+import supabase from '../supabase/supabase';
 import { secondary, primary, accent } from '../styles/colors/colors';
 
 export default function SignIn({ navigation }) {
@@ -24,8 +24,8 @@ export default function SignIn({ navigation }) {
 
   const signIn = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+      email,
+      password,
     })
 
     setSession(data ?? undefined);
@@ -59,7 +59,7 @@ export default function SignIn({ navigation }) {
         onChangeText={password => setPassword(password)}
         value={password}
         textContentType="password"
-        secureTextEntry={true}
+        secureTextEntry
         placeholder="Password"
         placeholderTextColor={secondary}
         autoCapitalize={'none'}
@@ -74,7 +74,7 @@ export default function SignIn({ navigation }) {
         <Text
           style={{ color: secondary, textDecorationLine: 'underline'}}  
         >
-          Don't have an account? Sign up now.
+          {`Don't have an account? Sign up now.`}
         </Text>
       </TouchableOpacity>
       <StatusBar style="auto" />

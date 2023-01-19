@@ -11,7 +11,7 @@ import {
   Alert
 } from 'react-native';
 
-import { supabase } from '../supabase/supabase';
+import supabase from '../supabase/supabase';
 
 import { secondary, primary, accent } from '../styles/colors/colors';
 
@@ -24,8 +24,8 @@ export default function SignUp({ navigation }) {
 
   async function signUpWithEmail() {
     const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
     })
 
     if (error) {
@@ -40,7 +40,7 @@ export default function SignUp({ navigation }) {
     const { error } = await supabase
     .from('profiles')
     .insert([
-      { username: username },
+      { username },
     ])
 
     if (error) Alert.alert(error.message);
@@ -76,7 +76,7 @@ export default function SignUp({ navigation }) {
         onChangeText={password => setPassword(password)}
         value={password}
         textContentType="password"
-        secureTextEntry={true}
+        secureTextEntry
         placeholder="Password"
         placeholderTextColor={'#8FE3CF'}
         autoCapitalize={'none'}

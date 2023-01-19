@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useCallback, useEffect, useState } from "react";
 import { 
   View, 
   Text,
@@ -10,19 +10,14 @@ import {
   SafeAreaView,
   Pressable
  } from "react-native";
-import { Avatar, Header } from "react-native-elements";
-import { useAtom } from "jotai";
-import { 
-  sessionAtom, 
-  usernameAtom, 
-  fullNameAtom, 
-  avatarUrlAtom,
-  bioAtom,
-} from "../jotai/jotai";
+import { Header, Avatar } from "react-native-elements";
 
+import AvatarWidget from "./Widgets/Avatar";
+import { useAtom } from "jotai";
+import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom } from "../jotai/jotai";
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 
-import { supabase } from "../supabase/supabase";
+import supabase from '../supabase/supabase';
 
 export default function Profile() {
   const [session] = useAtom(sessionAtom);
@@ -37,7 +32,7 @@ export default function Profile() {
     getProfile()
   }, [])
 
-  async function getProfile() {
+  const getProfile = async () => {
     try {
       if (!session?.user) throw new Error('No user on the session!')
 
@@ -53,8 +48,39 @@ export default function Profile() {
       if (data) {
         setUsername(data?.username ?? 'username');
         setBio(data?.bio ?? 'Bio');
-        setAvatarUrl(data?.avatar_url);
+        setAvatarUrl(data?.avatar_url ?? '');
         setFullName(data?.full_name ?? 'Your Name');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message)
+      }
+    }
+  }
+
+  const toggleModalVisibility = useCallback(() => {
+    setModalVisible(!modalVisible);
+  }, [modalVisible])
+
+  const updateProfile = async (username, full_name, bio, avatar_url) => {
+    try {
+      if (!session?.user) throw new Error('No user on the session!')
+
+      const updates = {
+        id: session?.user.id,
+        username,
+        full_name,
+        bio,
+        avatar_url,
+        updated_at: new Date(),
+      }
+
+      let { error } = await supabase.from('profiles').upsert(updates)
+
+      if (error) {
+        throw error
+      } else {
+        toggleModalVisibility();
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -73,30 +99,31 @@ export default function Profile() {
           <Header
             backgroundColor={tertiary}
             leftComponent={
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <TouchableOpacity onPress={toggleModalVisibility}>
                 <Text style={styles.text}>Cancel</Text>
               </TouchableOpacity>
             }
             centerComponent={{ text: 'EDIT PROFILE', style: { color: textPrimary } }}
             rightComponent={
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Text style={styles.text}>Done</Text>
+              <TouchableOpacity onPress={toggleModalVisibility}>
+                <Text 
+                  style={styles.text}
+                  onPress={() => updateProfile(username, fullName, bio, avatarUrl)}
+                >Done</Text>
               </TouchableOpacity>
             }
           />
           <Pressable 
-          onPress={() => console.log('change picture')}
           style={{padding: 10}}
           >
-            <Avatar
-              size="large"
-              rounded
-              title="TU"
-              onPress={() => console.log("Works!")}
-              activeOpacity={0.7}
-              source={{uri: 'random'}}
+            <AvatarWidget
+              size={200}
+              url={avatarUrl}
+              onUpload={(url) => {
+                setAvatarUrl(url)
+                updateProfile(username, fullName, bio, url)
+              }}
             />
-            <Text style={styles.text}>Edit picture</Text>
           </Pressable>
           <View style={{width: '80%'}}>
             <Pressable style={styles.modalInfo}>
@@ -135,15 +162,14 @@ export default function Profile() {
         size="large"
         rounded
         title="TU"
-        onPress={() => console.log("Works!")}
         activeOpacity={0.7}
-        source={{uri: 'random'}}
+        source={{uri: avatarUrl}}
       />
       <Text style={styles.text}>{username}</Text>
       <Text style={styles.text}>{bio}</Text>
       <TouchableOpacity 
         style={styles.edit}
-        onPress={() => setModalVisible(true)}
+        onPress={toggleModalVisibility}
       >
         <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
