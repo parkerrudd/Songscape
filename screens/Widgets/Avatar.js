@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Button, Alert, Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from "expo-camera";
+import { decode } from "base64-arraybuffer";
+import { Buffer } from "buffer";
+import { atob } from "buffer";
 
 import { avatarUrlAtom, usernameAtom } from "../../jotai/jotai";
 import { useAtom } from "jotai";
@@ -14,7 +17,7 @@ export default function AvatarWidget({ url, size, onUpload }) {
   const avatarSize = { height: size, width: size }
 
   useEffect(() => {
-    if (url) downloadImage();
+    // if (url) downloadImage();
   }, [url])
 
   const downloadImage = async (path) => {
@@ -49,25 +52,46 @@ export default function AvatarWidget({ url, size, onUpload }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 1
+        quality: 1,
       })
       if (!result.canceled) {
-        uploadAvatar(result);
+        const response = await fetch(result.assets[0].uri);
+        convertToBase64(response);
       }
     }
   }
 
-  const uploadAvatar = async (imageData) => {
-    const formData = new FormData();
-    formData.append('image', {
-      uri: imageData.assets[0].uri,
-      type: 'image/png',
-      name: 'image.png'
-    })
+  const convertToBase64 = async (imageData) => {
+    const blob = await imageData.blob();
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64String = reader.result;
+      convertToArrayBuffer(base64String)
+    };
+  }
 
-    const filePath = `${username}/avatar/${Math.random()}.png`;
+  const convertToArrayBuffer = (file) => {
+    const base64 = file.replace('data:image/jpeg;base64,','');
+    const decoded = base64.toString('binary');
+    const len = decoded.length;
+    const arrayBuffer = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        arrayBuffer[i] = decoded.charCodeAt(i);
+    }
+    uploadAvatar(arrayBuffer);
+  }
 
-    const { error } = await supabase.storage.from('avatars').upload(filePath, JSON.stringify(formData));
+  const uploadAvatar = async (buffer) => {
+    const filePath = `${username}/public/avatar/${Math.random()}.jpg`;
+
+    const { error } = await supabase.storage.from('avatars').upload(
+      filePath,
+      buffer, {
+        contentType: 'image/jpeg'
+      }
+      )
     if (error) {
       Alert.alert(error.message);
       throw error
@@ -75,52 +99,6 @@ export default function AvatarWidget({ url, size, onUpload }) {
       onUpload(filePath);
     }
   }
-
-  // const uploadAvatar = async () => {
-  //   try {
-  //     setUploading(true)
-
-  //     const file = await DocumentPickerOptions.pickSingle({
-  //       presentationStyle: 'fullScreen',
-  //       copyTo: 'cachesDirectory',
-  //       type: types.images,
-  //       mode: 'open',
-  //     })
-
-  //     const photo = {
-  //       uri: file.fileCopyUri,
-  //       type: file.type,
-  //       name: file.name,
-  //     }
-
-  //     const formData = new FormData()
-  //     formData.append('file', photo)
-
-  //     const fileExt = file.name.split('.').pop()
-  //     const filePath = `${Math.random()}.${fileExt}`
-
-  //     let { error } = await supabase.storage.from('avatars').upload(filePath, formData)
-
-  //     if (error) {
-  //       throw error
-  //     }
-
-  //     onUpload(filePath)
-  //   } catch (error) {
-  //     if (isCancel(error)) {
-  //       console.warn('cancelled')
-  //       // User cancelled the picker, exit any dialogs or menus and move on
-  //     } else if (isInProgress(error)) {
-  //       console.warn('multiple pickers were opened, only the last will be considered')
-  //     } else if (error instanceof Error) {
-  //       Alert.alert(error.message)
-  //     } else {
-  //       throw error
-  //     }
-  //   } finally {
-  //     setUploading(false)
-  //   }
-  // }
 
   return (
     <View>
