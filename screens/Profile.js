@@ -8,7 +8,8 @@ import {
   StyleSheet, 
   Modal, 
   SafeAreaView,
-  Pressable
+  Pressable,
+  Image
  } from "react-native";
 import { Header, Avatar } from "react-native-elements";
 
@@ -26,11 +27,14 @@ export default function Profile() {
   const [avatarUrl, setAvatarUrl] = useAtom(avatarUrlAtom);
   const [bio, setBio] = useAtom(bioAtom);
 
+  const [publicAvatarUrl, setPublicAvatarUrl] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   
   useEffect(() => {
-    getProfile()
-  }, [])
+    if (session && session.user) {
+      getProfile();
+    }
+  }, [session, avatarUrl])
 
   const getProfile = async () => {
     try {
@@ -48,12 +52,34 @@ export default function Profile() {
       if (data) {
         setUsername(data?.username ?? 'username');
         setBio(data?.bio ?? 'Bio');
-        setAvatarUrl(data?.avatar_url ?? '');
         setFullName(data?.full_name ?? 'Your Name');
+        if (data?.avatar_url) {
+          setAvatarUrl(data?.avatar_url);
+          getAvatar();
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
+      }
+    }
+  }
+
+  const getAvatar = () => {
+    try {
+      const { data, error } = supabase.storage.from('avatars').getPublicUrl(avatarUrl);
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        setPublicAvatarUrl(data.publicUrl);
+      }
+    }
+    catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
       }
     }
   }
@@ -163,15 +189,15 @@ export default function Profile() {
         rounded
         title="TU"
         activeOpacity={0.7}
-        source={{uri: avatarUrl}}
+        source={{uri: publicAvatarUrl}}
       />
       <Text style={styles.text}>{username}</Text>
       <Text style={styles.text}>{bio}</Text>
       <TouchableOpacity 
-        style={styles.edit}
-        onPress={toggleModalVisibility}
+      style={styles.edit}
+      onPress={toggleModalVisibility}
       >
-        <Text style={styles.text}>Edit Profile</Text>
+      <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )

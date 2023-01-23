@@ -3,8 +3,6 @@ import { View, StyleSheet, Button, Alert, Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from "expo-camera";
 import { decode } from "base64-arraybuffer";
-import { Buffer } from "buffer";
-import { atob } from "buffer";
 
 import { avatarUrlAtom, usernameAtom } from "../../jotai/jotai";
 import { useAtom } from "jotai";
@@ -68,27 +66,27 @@ export default function AvatarWidget({ url, size, onUpload }) {
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       const base64String = reader.result;
-      convertToArrayBuffer(base64String)
+      uploadAvatar(base64String)
     };
   }
 
-  const convertToArrayBuffer = (file) => {
-    const base64 = file.replace('data:image/jpeg;base64,','');
-    const decoded = base64.toString('binary');
-    const len = decoded.length;
-    const arrayBuffer = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        arrayBuffer[i] = decoded.charCodeAt(i);
-    }
-    uploadAvatar(arrayBuffer);
-  }
+  // const convertToArrayBuffer = (file) => {
+  //   const base64 = file.replace('data:image/jpeg;base64,','');
+  //   const decoded = base64.toString('binary');
+  //   const len = decoded.length;
+  //   const arrayBuffer = new Uint16Array(len);
+  //   for (let i = 0; i < len; i++) {
+  //       arrayBuffer[i] = decoded.charCodeAt(i);
+  //   }
+  //   uploadAvatar(arrayBuffer);
+  // }
 
-  const uploadAvatar = async (buffer) => {
+  const uploadAvatar = async (base64) => {
     const filePath = `${username}/public/avatar/${Math.random()}.jpg`;
 
     const { error } = await supabase.storage.from('avatars').upload(
       filePath,
-      buffer, {
+      decode(base64), {
         contentType: 'image/jpeg'
       }
       )
