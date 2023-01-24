@@ -8,3 +8,4 @@ export const usernameAtom = atom();
 export const fullNameAtom = atom();
 export const bioAtom = atom();
 export const avatarUrlAtom = atom();
+export const avatarPublicUrlAtom = atom();

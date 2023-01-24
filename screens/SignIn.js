@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useAtom } from 'jotai';
 import { sessionAtom, sessionUserAtom } from '../jotai/jotai';
@@ -12,9 +12,12 @@ import {
   TouchableOpacity,
   Alert
 } from 'react-native';
+import { Platform } from 'react-native';
 
 import supabase from '../supabase/supabase';
 import { secondary, primary, accent } from '../styles/colors/colors';
+
+const isIOS = Platform.OS === 'ios';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
@@ -39,11 +42,11 @@ export default function SignIn({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.container}>
+    <KeyboardAvoidingView behavior={isIOS ? 'padding' : 'height'} style={styles.container}>
       <Image 
       style={styles.image} 
       source={require('../assets/Songscape-1.png')}
-      /> 
+      />
       <TextInput
         style={styles.input}
         onChangeText={email => setEmail(email)}

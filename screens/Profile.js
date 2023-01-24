@@ -15,26 +15,28 @@ import { Header, Avatar } from "react-native-elements";
 
 import AvatarWidget from "./Widgets/Avatar";
 import { useAtom } from "jotai";
-import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom } from "../jotai/jotai";
+import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/jotai";
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 
 import supabase from '../supabase/supabase';
 
 export default function Profile() {
-  const [session] = useAtom(sessionAtom);
+  const [session, setSession] = useAtom(sessionAtom);
+  const [sessionUser, setSessionUser] = useAtom(sessionUserAtom);
   const [username, setUsername] = useAtom(usernameAtom);
   const [fullName, setFullName] = useAtom(fullNameAtom);
   const [avatarUrl, setAvatarUrl] = useAtom(avatarUrlAtom);
   const [bio, setBio] = useAtom(bioAtom);
+  const [publicAvatarUrl, setPublicAvatarUrl] = useAtom(avatarPublicUrlAtom);
 
-  const [publicAvatarUrl, setPublicAvatarUrl] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   
   useEffect(() => {
-    if (session && session.user) {
+    if (!loaded && session && session.user) {
       getProfile();
     }
-  }, [session, avatarUrl])
+  }, [session, avatarUrl, sessionUser])
 
   const getProfile = async () => {
     try {
@@ -57,6 +59,7 @@ export default function Profile() {
           setAvatarUrl(data?.avatar_url);
           getAvatar();
         }
+        setLoaded(true);
       }
     } catch (error) {
       if (error instanceof Error) {
