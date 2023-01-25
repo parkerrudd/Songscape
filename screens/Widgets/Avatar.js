@@ -1,42 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Button, Alert, Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from "expo-camera";
 import { decode } from "base64-arraybuffer";
 
-import { avatarUrlAtom, usernameAtom } from "../../jotai/atoms";
+import { usernameAtom } from "../../jotai/atoms";
 import { useAtom } from "jotai";
 import supabase from "../../supabase/supabase";
 
 export default function AvatarWidget({ url, size, onUpload }) {
-  const [avatarUrl, setAvatarUrl] = useAtom(avatarUrlAtom);
-  const [username] = useAtom(usernameAtom)
+  const [username] = useAtom(usernameAtom);
   const [uploading, setUploading] = useState(false);
-  const avatarSize = { height: size, width: size }
-
-  useEffect(() => {
-    // if (url) downloadImage();
-  }, [url])
-
-  const downloadImage = async (path) => {
-    try {
-      const { data, error } = await supabase.storage.from('avatars').download(path)
-
-      if (error) {
-        throw error
-      }
-
-      const fr = new FileReader()
-      fr.readAsDataURL(data)
-      fr.onload = () => {
-        setAvatarUrl(fr.result)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log('Error downloading image: ', error.message)
-      }
-    }
-  }
+  const avatarSize = { height: size, width: size };
 
   const pickImage = async () => {
     const { status } = await Camera.getCameraPermissionsAsync();
@@ -100,9 +75,9 @@ export default function AvatarWidget({ url, size, onUpload }) {
 
   return (
     <View>
-      {avatarUrl ? (
+      {url ? (
         <Image
-          source={{ uri: avatarUrl }}
+          source={{ uri: url }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
         />

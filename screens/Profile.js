@@ -1,15 +1,5 @@
 import { React, useCallback, useEffect, useState } from "react";
-import { 
-  View, 
-  Text,
-  TextInput,
-  Alert, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Modal, 
-  SafeAreaView,
-  Pressable
- } from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Pressable } from "react-native";
 import { Header, Avatar } from "react-native-elements";
 
 import AvatarWidget from "./Widgets/Avatar";
@@ -20,8 +10,8 @@ import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 import supabase from '../supabase/supabase';
 
 export default function Profile() {
-  const [session, setSession] = useAtom(sessionAtom);
-  const [sessionUser, setSessionUser] = useAtom(sessionUserAtom);
+  const [session] = useAtom(sessionAtom);
+  const [sessionUser] = useAtom(sessionUserAtom);
   const [username, setUsername] = useAtom(usernameAtom);
   const [fullName, setFullName] = useAtom(fullNameAtom);
   const [avatarUrl, setAvatarUrl] = useAtom(avatarUrlAtom);
@@ -30,7 +20,7 @@ export default function Profile() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  
+
   useEffect(() => {
     if (!loaded && session) {
       getProfile();
@@ -119,23 +109,32 @@ export default function Profile() {
     }
   }
 
+  const onCancel = () => {
+    getProfile();
+    toggleModalVisibility();
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Modal
         animationType="slide"
+        animationTiming={1000}
         visible={modalVisible}
       >
         <SafeAreaView style={styles.modalView}>
           <Header
             backgroundColor={tertiary}
             leftComponent={
-              <TouchableOpacity onPress={toggleModalVisibility}>
-                <Text style={styles.text}>Cancel</Text>
+              <TouchableOpacity>
+                <Text 
+                  style={styles.text}
+                  onPress={onCancel}
+                >Cancel</Text>
               </TouchableOpacity>
             }
             centerComponent={{ text: 'EDIT PROFILE', style: { color: textPrimary } }}
             rightComponent={
-              <TouchableOpacity onPress={toggleModalVisibility}>
+              <TouchableOpacity>
                 <Text 
                   style={styles.text}
                   onPress={() => updateProfile(username, fullName, bio, avatarUrl)}
@@ -148,7 +147,7 @@ export default function Profile() {
           >
             <AvatarWidget
               size={200}
-              url={avatarUrl}
+              url={publicAvatarUrl}
               onUpload={(url) => {
                 setAvatarUrl(url)
                 updateProfile(username, fullName, bio, url)
@@ -160,9 +159,10 @@ export default function Profile() {
               <Text style={styles.modalLabels}>Name: </Text>
               <TextInput 
                 style={styles.modalInputs}
-              placeholder="Your Name"
-              value={fullName}
-              onChangeText={fullName => setFullName(fullName)}
+                placeholder="Your Name"
+                placeholderTextColor={textPrimary}
+                value={fullName}
+                onChangeText={fullName => setFullName(fullName)}
               />
             </Pressable>
             <Pressable style={styles.modalInfo}>
@@ -170,6 +170,7 @@ export default function Profile() {
               <TextInput 
                 style={styles.modalInputs}
                 placeholder="username"
+                placeholderTextColor={textPrimary}
                 value={username}
                 autoCapitalize={'none'}
                 onChangeText={username => setUsername(username)}
@@ -180,8 +181,10 @@ export default function Profile() {
               <TextInput 
                 style={styles.modalInputs}
                 placeholder="Bio here..."
+                placeholderTextColor={textPrimary}
                 value={bio}
                 onChangeText={bio => setBio(bio)}
+                multiline={true}
               />
             </Pressable>
           </View>
@@ -201,7 +204,7 @@ export default function Profile() {
       style={styles.edit}
       onPress={toggleModalVisibility}
       >
-      <Text style={styles.text}>Edit Profile</Text>
+        <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
