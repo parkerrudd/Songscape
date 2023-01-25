@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Camera } from "expo-camera";
 import { decode } from "base64-arraybuffer";
 
-import { avatarUrlAtom, usernameAtom } from "../../jotai/jotai";
+import { avatarUrlAtom, usernameAtom } from "../../jotai/atoms";
 import { useAtom } from "jotai";
 import supabase from "../../supabase/supabase";
 

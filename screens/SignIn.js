@@ -1,7 +1,7 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useAtom } from 'jotai';
-import { sessionAtom, sessionUserAtom } from '../jotai/jotai';
+import { sessionAtom, sessionUserAtom } from '../jotai/atoms';
 import { 
   StyleSheet, 
   Text, 
@@ -10,9 +10,9 @@ import {
   TextInput, 
   KeyboardAvoidingView,
   TouchableOpacity,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
-import { Platform } from 'react-native';
 
 import supabase from '../supabase/supabase';
 import { secondary, primary, accent } from '../styles/colors/colors';
@@ -36,8 +36,6 @@ export default function SignIn({ navigation }) {
 
     if (error) {
       Alert.alert(error.message);
-    } else {
-      navigation.navigate('Profile');
     }
   }
 

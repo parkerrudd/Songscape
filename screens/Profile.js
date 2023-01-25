@@ -8,14 +8,13 @@ import {
   StyleSheet, 
   Modal, 
   SafeAreaView,
-  Pressable,
-  Image
+  Pressable
  } from "react-native";
 import { Header, Avatar } from "react-native-elements";
 
 import AvatarWidget from "./Widgets/Avatar";
 import { useAtom } from "jotai";
-import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/jotai";
+import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/atoms";
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 
 import supabase from '../supabase/supabase';
@@ -33,7 +32,7 @@ export default function Profile() {
   const [loaded, setLoaded] = useState(false);
   
   useEffect(() => {
-    if (!loaded && session && session.user) {
+    if (!loaded && session) {
       getProfile();
     }
   }, [session, avatarUrl, sessionUser])
@@ -59,7 +58,6 @@ export default function Profile() {
           setAvatarUrl(data?.avatar_url);
           getAvatar();
         }
-        setLoaded(true);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -84,6 +82,9 @@ export default function Profile() {
       if (error instanceof Error) {
         Alert.alert(error.message);
       }
+    }
+    finally {
+      setLoaded(true);
     }
   }
 
