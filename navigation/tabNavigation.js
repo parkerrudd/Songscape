@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import { accent, primary } from "../styles/colors/colors";
+import { accent, primary, secondary } from "../styles/colors/colors";
 import HomeStack from "./routes/homeStack";
 import SearchStack from "./routes/searchStack";
 import ProfileStack from "./routes/profileStack";
@@ -14,8 +14,8 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: primary},
-        tabBarActiveTintColor: accent
+        tabBarStyle: { backgroundColor: accent},
+        tabBarActiveTintColor: secondary
       }}>
       <Tab.Screen 
         name="HomeTab"

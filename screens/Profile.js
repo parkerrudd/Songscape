@@ -3,6 +3,7 @@ import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, Safe
 import { Header, Avatar } from "react-native-elements";
 
 import AvatarWidget from "./Widgets/Avatar";
+import TabsParent from "./ProfileTabs/TabsParent";
 import { useAtom } from "jotai";
 import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/atoms";
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
@@ -199,13 +200,14 @@ export default function Profile() {
         source={{uri: publicAvatarUrl}}
       />
       <Text style={styles.text}>{username}</Text>
-      <Text style={styles.text}>{bio}</Text>
       <TouchableOpacity 
       style={styles.edit}
       onPress={toggleModalVisibility}
       >
         <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
+      <Text style={styles.text}>{bio}</Text>
+      <TabsParent />
     </SafeAreaView>
   )
 }
