@@ -1,9 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Profile from "../../screens/Profile";
-import AddReview from "../../screens/AddContent/AddReview";
-import AddList from "../../screens/AddContent/AddList";
-import AddFavorite from "../../screens/AddContent/AddFavorite";
+import Profile from "../../screens/Profile/Profile";
+import AddReview from "../../screens/Profile/AddContent/AddReview";
+import AddList from "../../screens/Profile/AddContent/AddList";
+import AddFavorite from "../../screens/Profile/AddContent/AddFavorite";
 
 const Stack = createStackNavigator();
 

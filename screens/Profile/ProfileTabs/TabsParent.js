@@ -4,11 +4,11 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { accent, tertiary, textPrimary } from "../../styles/colors/colors";
-import ReviewsTab from "./Tabs/ReviewsTab";
+import { accent, tertiary, textPrimary } from "../../../styles/colors/colors";
+import ReviewsTab from './Tabs/ReviewsTab'
 import ListsTab from "./Tabs/ListsTab";
 import FavoritesTab from "./Tabs/FavoritesTab";
-import { screenHeight, screenWidth } from "../../constants/constants";
+import { screenHeight, screenWidth } from "../../../constants/constants";
 
 export default function TabsParent() {
     const [index, setIndex] = useState(0);

@@ -3,14 +3,13 @@ import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, Safe
 import { Header, Avatar } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 
-import AvatarWidget from "./Widgets/Avatar";
+import AvatarWidget from '../Widgets/Avatar';
 import TabsParent from "./ProfileTabs/TabsParent";
 import { useAtom } from "jotai";
-import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/atoms";
-import { primary, secondary, tertiary, textPrimary } from "../styles/colors/colors";
-
-import supabase from '../supabase/supabase';
-import { screenHeight, screenWidth } from "../constants/constants";
+import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../../jotai/atoms";
+import { primary, secondary, tertiary, textPrimary } from "../../styles/colors/colors";
+import supabase from '../../supabase/supabase';
+import { screenHeight, screenWidth } from "../../constants/constants";
 
 export default function Profile({ navigation }) {
   const [session] = useAtom(sessionAtom);
