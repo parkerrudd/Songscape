@@ -14,7 +14,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, data) => {
+    supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN') {
         setIsLoggedIn(true);
       }

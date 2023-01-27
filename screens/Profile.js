@@ -3,11 +3,13 @@ import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, Safe
 import { Header, Avatar } from "react-native-elements";
 
 import AvatarWidget from "./Widgets/Avatar";
+import TabsParent from "./ProfileTabs/TabsParent";
 import { useAtom } from "jotai";
 import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/atoms";
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 
 import supabase from '../supabase/supabase';
+import { screenWidth } from "../constants/constants";
 
 export default function Profile() {
   const [session] = useAtom(sessionAtom);
@@ -199,13 +201,14 @@ export default function Profile() {
         source={{uri: publicAvatarUrl}}
       />
       <Text style={styles.text}>{username}</Text>
-      <Text style={styles.text}>{bio}</Text>
       <TouchableOpacity 
       style={styles.edit}
       onPress={toggleModalVisibility}
       >
         <Text style={styles.text}>Edit Profile</Text>
       </TouchableOpacity>
+      <Text style={styles.text}>{bio}</Text>
+      <TabsParent />
     </SafeAreaView>
   )
 }
@@ -215,12 +218,14 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: primary,
     alignItems: 'center',
-    padding: 20,
+    padding: 20
   }, 
   text: {
     color: textPrimary, 
     padding: 5,
-    fontSize: 16
+    fontSize: 16,
+    maxWidth: screenWidth/1.3,
+    textAlign: 'center'
   },
   edit: {
     display: 'flex',
@@ -228,12 +233,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: tertiary,
     borderRadius: 5,
-    width: '40%',
+    width: '40%'
   },
   modalView: {
     flex: 1,
     backgroundColor: tertiary,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalInfo: {
     display: 'flex',
