@@ -2,6 +2,7 @@ import { React, useCallback, useEffect, useState } from "react";
 import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Pressable } from "react-native";
 import { Header, Avatar } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedLottieView from "lottie-react-native";
 
 import AvatarWidget from '../Widgets/Avatar';
 import TabsParent from "./ProfileTabs/TabsParent";
@@ -127,156 +128,171 @@ export default function Profile({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Modal
-        animationType="slide"
-        animationTiming={1000}
-        visible={modalVisible}
-      >
-        <SafeAreaView style={styles.modalView}>
-          <Header
-            backgroundColor={tertiary}
-            leftComponent={
-              <TouchableOpacity>
-                <Text 
-                  style={styles.text}
-                  onPress={onCancel}
-                >Cancel</Text>
-              </TouchableOpacity>
-            }
-            centerComponent={{ text: 'EDIT PROFILE', style: { color: textPrimary } }}
-            rightComponent={
-              <TouchableOpacity>
-                <Text 
-                  style={styles.text}
-                  onPress={() => updateProfile(username, fullName, bio, avatarUrl)}
-                >Done</Text>
-              </TouchableOpacity>
-            }
-          />
-          <Pressable 
-          style={{padding: 10}}
-          >
-            <AvatarWidget
-              size={200}
-              url={publicAvatarUrl}
-              onUpload={(url) => {
-                setAvatarUrl(url)
-                updateProfile(username, fullName, bio, url)
-              }}
+    <View style={styles.loadScreen}>
+    { !loaded ? (
+      <SafeAreaView style={styles.loadScreen}>
+        <AnimatedLottieView 
+          source={require('../../assets/99680-3-dots-loading.json')}
+          autoPlay
+        />
+      </SafeAreaView>
+    ) : (
+      <SafeAreaView style={styles.container}>
+        <Modal
+          animationType="slide"
+          animationTiming={1000}
+          visible={modalVisible}
+        >
+          <SafeAreaView style={styles.modalView}>
+            <Header
+              backgroundColor={tertiary}
+              leftComponent={
+                <TouchableOpacity>
+                  <Text
+                    style={styles.text}
+                    onPress={onCancel}
+                  >Cancel</Text>
+                </TouchableOpacity>
+              }
+              centerComponent={{ text: 'EDIT PROFILE', style: { color: textPrimary } }}
+              rightComponent={
+                <TouchableOpacity>
+                  <Text
+                    style={styles.text}
+                    onPress={() => updateProfile(username, fullName, bio, avatarUrl)}
+                  >Done</Text>
+                </TouchableOpacity>
+              }
             />
-          </Pressable>
-          <View style={{width: '80%'}}>
-            <Pressable style={styles.modalInfo}>
-              <Text style={styles.modalLabels}>Name: </Text>
-              <TextInput 
-                style={styles.modalInputs}
-                placeholder="Your Name"
-                placeholderTextColor={textPrimary}
-                value={fullName}
-                onChangeText={fullName => setFullName(fullName)}
+            <Pressable
+            style={{padding: 10}}
+            >
+              <AvatarWidget
+                size={200}
+                url={publicAvatarUrl}
+                onUpload={(url) => {
+                  setAvatarUrl(url)
+                  updateProfile(username, fullName, bio, url)
+                }}
               />
             </Pressable>
-            <Pressable style={styles.modalInfo}>
-              <Text style={styles.modalLabels}>Username: </Text>
-              <TextInput 
-                style={styles.modalInputs}
-                placeholder="username"
-                placeholderTextColor={textPrimary}
-                value={username}
-                autoCapitalize={'none'}
-                onChangeText={username => setUsername(username)}
-              />
-            </Pressable>
-            <Pressable style={styles.modalInfo}>
-              <Text style={styles.modalLabels}>Bio: </Text>
-              <TextInput 
-                style={styles.modalInputs}
-                placeholder="Bio here..."
-                placeholderTextColor={textPrimary}
-                value={bio}
-                onChangeText={bio => setBio(bio)}
-                multiline={true}
-              />
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </Modal>
-      <View style={styles.plus}>
-        <TouchableOpacity onPress={toggleContentModal}>
-          <Ionicons
-            style={styles.plus}
-            name='add-circle-outline'
-            size={30}
-            color={textPrimary}
-          />
-        </TouchableOpacity>
-      </View>
-      <Modal
-        visible={contentModalVisible}
-        animationType={"slide"}
-        transparent={true}
-        
-      >
-        <SafeAreaView style={styles.contentModal}>
+            <View style={{width: '80%'}}>
+              <Pressable style={styles.modalInfo}>
+                <Text style={styles.modalLabels}>Name: </Text>
+                <TextInput
+                  style={styles.modalInputs}
+                  placeholder="Your Name"
+                  placeholderTextColor={textPrimary}
+                  value={fullName}
+                  onChangeText={fullName => setFullName(fullName)}
+                />
+              </Pressable>
+              <Pressable style={styles.modalInfo}>
+                <Text style={styles.modalLabels}>Username: </Text>
+                <TextInput
+                  style={styles.modalInputs}
+                  placeholder="username"
+                  placeholderTextColor={textPrimary}
+                  value={username}
+                  autoCapitalize={'none'}
+                  onChangeText={username => setUsername(username)}
+                />
+              </Pressable>
+              <Pressable style={styles.modalInfo}>
+                <Text style={styles.modalLabels}>Bio: </Text>
+                <TextInput
+                  style={styles.modalInputs}
+                  placeholder="Bio here..."
+                  placeholderTextColor={textPrimary}
+                  value={bio}
+                  onChangeText={bio => setBio(bio)}
+                  multiline={true}
+                />
+              </Pressable>
+            </View>
+          </SafeAreaView>
+        </Modal>
+        <View style={styles.plus}>
           <TouchableOpacity onPress={toggleContentModal}>
             <Ionicons
-              style={styles.close}
-              name='arrow-down-sharp'
+              style={styles.plus}
+              name='add-circle-outline'
               size={30}
-              color={secondary}
+              color={textPrimary}
             />
           </TouchableOpacity>
-          <View>
-            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Review')}>
+        </View>
+        <Modal
+          visible={contentModalVisible}
+          animationType={"slide"}
+          transparent={true}
+        
+        >
+          <SafeAreaView style={styles.contentModal}>
+            <TouchableOpacity onPress={toggleContentModal}>
               <Ionicons
-                name='ios-star'
+                style={styles.close}
+                name='arrow-down-sharp'
                 size={30}
                 color={secondary}
               />
-              <Text style={styles.newContentText}>Add a Review</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add List')}>
-              <Ionicons
-                name='ios-list'
-                size={30}
-                color={secondary}
-              />
-              <Text style={styles.newContentText}>Add a List</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Favorite')}>
-              <Ionicons
-                name='ios-heart'
-                size={30}
-                color={secondary}
-              />
-              <Text style={styles.newContentText}>Add Favorites</Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </Modal>
-      <Text style={[styles.text]}>{fullName}</Text>
-      <Avatar
-        size="large"
-        rounded
-        title="TU"
-        activeOpacity={0.7}
-        source={{uri: publicAvatarUrl}}
-      />
-      <Text style={styles.text}>{username}</Text>
-      <TouchableOpacity 
-      style={styles.edit}
-      onPress={toggleModalVisibility}
-      >
-        <Text style={styles.text}>Edit Profile</Text>
-      </TouchableOpacity>
-      <Text style={styles.text}>{bio}</Text>
-      <TabsParent />
-    </SafeAreaView>
+            <View>
+              <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Review')}>
+                <Ionicons
+                  name='ios-star'
+                  size={30}
+                  color={secondary}
+                />
+                <Text style={styles.newContentText}>Add a Review</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add List')}>
+                <Ionicons
+                  name='ios-list'
+                  size={30}
+                  color={secondary}
+                />
+                <Text style={styles.newContentText}>Add a List</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Favorite')}>
+                <Ionicons
+                  name='ios-heart'
+                  size={30}
+                  color={secondary}
+                />
+                <Text style={styles.newContentText}>Add Favorites</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </Modal>
+        <Text style={[styles.text]}>{fullName}</Text>
+        <Avatar
+          size="large"
+          rounded
+          title="TU"
+          activeOpacity={0.7}
+          source={{uri: publicAvatarUrl}}
+        />
+        <Text style={styles.text}>{username}</Text>
+        <TouchableOpacity
+        style={styles.edit}
+        onPress={toggleModalVisibility}
+        >
+          <Text style={styles.text}>Edit Profile</Text>
+        </TouchableOpacity>
+        <Text style={styles.text}>{bio}</Text>
+        <TabsParent />
+      </SafeAreaView>
+    )}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  loadScreen: {
+    height: screenHeight,
+    backgroundColor: primary,
+  },
   container: {
     flex: 1, 
     backgroundColor: primary,
