@@ -208,7 +208,7 @@ export default function Profile({ navigation }) {
             style={styles.plus}
             name='add-circle-outline'
             size={30}
-            color={secondary}
+            color={textPrimary}
           />
         </TouchableOpacity>
       </View>
@@ -216,6 +216,7 @@ export default function Profile({ navigation }) {
         visible={contentModalVisible}
         animationType={"slide"}
         transparent={true}
+        
       >
         <SafeAreaView style={styles.contentModal}>
           <TouchableOpacity onPress={toggleContentModal}>
@@ -299,8 +300,8 @@ const styles = StyleSheet.create({
   },
   plus: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 30,
+    right: 15,
     zIndex: 1
   },
   close: {
