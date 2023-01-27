@@ -1,17 +1,18 @@
 import { React, useCallback, useEffect, useState } from "react";
 import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Pressable } from "react-native";
 import { Header, Avatar } from "react-native-elements";
+import { Ionicons } from "@expo/vector-icons";
 
 import AvatarWidget from "./Widgets/Avatar";
 import TabsParent from "./ProfileTabs/TabsParent";
 import { useAtom } from "jotai";
 import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatarPublicUrlAtom, sessionUserAtom } from "../jotai/atoms";
-import { primary, tertiary, textPrimary } from "../styles/colors/colors";
+import { primary, secondary, tertiary, textPrimary } from "../styles/colors/colors";
 
 import supabase from '../supabase/supabase';
-import { screenWidth } from "../constants/constants";
+import { screenHeight, screenWidth } from "../constants/constants";
 
-export default function Profile() {
+export default function Profile({ navigation }) {
   const [session] = useAtom(sessionAtom);
   const [sessionUser] = useAtom(sessionUserAtom);
   const [username, setUsername] = useAtom(usernameAtom);
@@ -21,6 +22,7 @@ export default function Profile() {
   const [publicAvatarUrl, setPublicAvatarUrl] = useAtom(avatarPublicUrlAtom);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [contentModalVisible, setContentModalVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -116,6 +118,15 @@ export default function Profile() {
     toggleModalVisibility();
   }
 
+  const toggleContentModal = () => {
+    setContentModalVisible(!contentModalVisible);
+  }
+
+  const onNavigate = (location) => {
+    toggleContentModal();
+    navigation.navigate(location);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Modal
@@ -192,7 +203,59 @@ export default function Profile() {
           </View>
         </SafeAreaView>
       </Modal>
-      <Text style={styles.text}>{fullName}</Text>
+      <View style={styles.plus}>
+        <TouchableOpacity onPress={toggleContentModal}>
+          <Ionicons
+            style={styles.plus}
+            name='add-circle-outline'
+            size={30}
+            color={secondary}
+          />
+        </TouchableOpacity>
+      </View>
+      <Modal
+        visible={contentModalVisible}
+        animationType={"slide"}
+        transparent={true}
+      >
+        <SafeAreaView style={styles.contentModal}>
+          <TouchableOpacity onPress={toggleContentModal}>
+            <Ionicons
+              style={styles.close}
+              name='arrow-down-sharp'
+              size={30}
+              color={secondary}
+            />
+          </TouchableOpacity>
+          <View>
+            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Review')}>
+              <Ionicons
+                name='ios-star'
+                size={30}
+                color={secondary}
+              />
+              <Text style={styles.newContentText}>Add a Review</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add List')}>
+              <Ionicons
+                name='ios-list'
+                size={30}
+                color={secondary}
+              />
+              <Text style={styles.newContentText}>Add a List</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.newContentList} onPress={() => onNavigate('Add Favorite')}>
+              <Ionicons
+                name='ios-heart'
+                size={30}
+                color={secondary}
+              />
+              <Text style={styles.newContentText}>Add Favorites</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+      <Text style={[styles.text]}>{fullName}</Text>
       <Avatar
         size="large"
         rounded
@@ -235,6 +298,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '40%'
   },
+  plus: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1
+  },
+  close: {
+    textAlign: 'center',
+  },
   modalView: {
     flex: 1,
     backgroundColor: tertiary,
@@ -256,5 +328,30 @@ const styles = StyleSheet.create({
     flex: 1, 
     color: textPrimary,
     fontSize: 16
+  },
+  contentModal: {
+    height: screenHeight/3,
+    width: screenWidth,
+    backgroundColor: tertiary,
+    position: 'absolute',
+    bottom: 0,
+    borderRadius: 20,
+    opacity: .9
+  },
+  newContentList: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    height: '30%',
+    paddingLeft: 10
+  },
+  newContentText: {
+    color: textPrimary,
+    padding: 20,
+    fontSize: 20,
+    fontWeight: "bold"
   }
 })

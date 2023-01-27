@@ -35,15 +35,16 @@ export default function TabsParent() {
     );
 };
   const renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={styles.indicator}
-      style={styles.tabBar}
-      labelStyle={styles.label}
-      renderIcon={renderIcon}
-    />
+    <TouchableOpacity onPress={() => setIndex(props.navigationState.index)}>
+      <TabBar
+        {...props}
+        indicatorStyle={styles.indicator}
+        style={styles.tabBar}
+        labelStyle={styles.label}
+        renderIcon={renderIcon}
+      />
+    </TouchableOpacity>
   );
-
 
   return (
     <SafeAreaView>
@@ -51,8 +52,8 @@ export default function TabsParent() {
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
-          onIndexChange={setIndex}
-          style={{backgroundColor: accent }}
+          onIndexChange={() => setIndex(index)}
+          style={styles.tabHeader}
           renderTabBar={renderTabBar}
         />
       </View>
@@ -68,6 +69,9 @@ const styles = StyleSheet.create({
     height: screenHeight,
     backgroundColor: accent,
     marginTop: 10
+  },
+  tabHeader: {
+    backgroundColor: accent
   },
   tabBar: {
     backgroundColor: tertiary,
