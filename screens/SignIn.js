@@ -10,14 +10,12 @@ import {
   TextInput, 
   KeyboardAvoidingView,
   TouchableOpacity,
-  Alert,
-  Platform
+  Alert
 } from 'react-native';
 
 import supabase from '../supabase/supabase';
 import { secondary, primary, accent } from '../styles/colors/colors';
-
-const isIOS = Platform.OS === 'ios';
+import { isIOS } from '../constants/constants';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');

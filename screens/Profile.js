@@ -9,6 +9,7 @@ import { sessionAtom, usernameAtom, fullNameAtom, avatarUrlAtom, bioAtom, avatar
 import { primary, tertiary, textPrimary } from "../styles/colors/colors";
 
 import supabase from '../supabase/supabase';
+import { screenWidth } from "../constants/constants";
 
 export default function Profile() {
   const [session] = useAtom(sessionAtom);
@@ -217,12 +218,14 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: primary,
     alignItems: 'center',
-    padding: 20,
+    padding: 20
   }, 
   text: {
     color: textPrimary, 
     padding: 5,
-    fontSize: 16
+    fontSize: 16,
+    maxWidth: screenWidth/1.3,
+    textAlign: 'center'
   },
   edit: {
     display: 'flex',
@@ -230,12 +233,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: tertiary,
     borderRadius: 5,
-    width: '40%',
+    width: '40%'
   },
   modalView: {
     flex: 1,
     backgroundColor: tertiary,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalInfo: {
     display: 'flex',

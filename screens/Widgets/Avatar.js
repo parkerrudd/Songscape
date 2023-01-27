@@ -16,7 +16,7 @@ export default function AvatarWidget({ url, size, onUpload }) {
   const pickImage = async () => {
     const { status } = await Camera.getCameraPermissionsAsync();
     if (status !== 'granted') {
-      const { status } = Camera.requestCameraPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
         if (status !== 'granted') {
           Alert.alert(`No camera roll access`);
         }
