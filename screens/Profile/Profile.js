@@ -132,7 +132,7 @@ export default function Profile({ navigation }) {
     { !loaded ? (
       <SafeAreaView style={styles.loadScreen}>
         <AnimatedLottieView 
-          source={require('../../assets/99680-3-dots-loading.json')}
+          source={require('../../assets/99833-edupia-loading.json')}
           autoPlay
         />
       </SafeAreaView>
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   plus: {
     position: 'absolute',
-    top: 30,
+    top: 20,
     right: 15,
     zIndex: 1
   },

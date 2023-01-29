@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 
 import supabase from "../../supabase/supabase";
 import { sessionAtom, sessionUserAtom } from "../../jotai/atoms";
+import { LAST_FM_API_KEY } from '@env';
 
 export default function Home() {
   const [session, setSession] = useAtom(sessionAtom);
@@ -28,6 +29,10 @@ export default function Home() {
     } catch(error) {
       console.error(error);
     }
+  }
+
+  const getChart = async () =>{
+    // const { data, error } = await fetch()
   }
 
   return (

@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: 'center',
-    padding: 10,
+    padding: 20,
     color: secondary,
     fontWeight: '500',
     fontSize: 25
